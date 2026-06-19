@@ -1,0 +1,31 @@
+# REFERENCE ONLY -- This file is NOT loaded by pipeline code. See constants.py and run_real_data_pipeline.py for actual values.
+metadata_query: |
+  SELECT source_id, ra, dec, parallax, parallax_error,
+         phot_g_mean_mag, phot_bp_mean_mag, phot_rp_mean_mag,
+         bp_rp, phot_g_mean_flux_over_error,
+         classprob_dsc_combmod_star,
+         best_class_name, best_class_score,
+         in_vari_classification_result, in_vari_rrlyrae,
+         in_vari_cepheid, in_vari_long_period_variable,
+         in_vari_eclipsing_binary, in_vari_short_timescale,
+         has_epoch_photometry, num_selected_g_fov
+  FROM gaiadr3.gaia_source
+  JOIN gaiadr3.vari_classifier_result USING (source_id)
+  WHERE best_class_name IN ({class_filter})
+    AND best_class_score > {min_score}
+    AND has_epoch_photometry = 'true'
+    AND num_selected_g_fov >= {min_obs}
+    AND phot_g_mean_mag < {max_mag}
+
+class_filters:
+  RRAB: "'RRAB'"
+  RRC: "'RRC'"
+  DCEP: "'DCEP', 'CEP'"
+  DSCT_SXPHE: "'DSCT', 'SXPHE'"
+  ECL: "'ECL'"
+  MIRA_SR: "'MIRA_SR', 'MIRA', 'SR'"
+
+default_params:
+  min_score: 0.5
+  min_obs: 20
+  max_mag: 20.0

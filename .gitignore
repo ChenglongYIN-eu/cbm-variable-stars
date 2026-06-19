@@ -1,0 +1,28 @@
+# ---- Python build / cache ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- Logs (runtime only; per-fold training-log CSVs under results/ are kept) ----
+/logs/
+*.log
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Internal working documents (not part of the public release) ----
+REVISION_PLAN.md
+REVISION_PLAN_INDEPENDENT.md
+REVISION_PLAN_R3.md
+CODE_REVIEW_FINAL_REPORT.md
+
+# ---- Large experiment outputs (kept out of the public code+dataset repo; -> Zenodo) ----
+results/
+
+# ---- Manuscript / paper (published via the journal; not part of the code+dataset release) ----
+paper/

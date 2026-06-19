@@ -1,0 +1,167 @@
+project:
+  name: "cbm_variable_stars"
+  random_seed: 42
+  log_level: "INFO"
+  log_dir: "logs"
+
+paths:
+  raw_gaia: "data/raw/gaia"
+  raw_ogle: "data/raw/ogle"
+  interim: "data/interim"
+  processed: "data/processed"
+  results: "results"
+  models: "models_saved"
+
+dataset:
+  test_in_domain_ratio: 0.15
+  n_cv_folds: 5
+  stratify: true
+  scaler: "standard"
+
+gaia:
+  tap_url: "https://gea.esac.esa.int/tap-server/tap"
+  max_rows: 50000
+  timeout: 600
+  retry_count: 3
+
+ogle:
+  ftp_host: "ftp.astrouw.edu.pl"
+  ftp_base_path: "/ogle/ogle4/OCVS/"
+  http_base_url: "https://ogledb.astrouw.edu.pl/~ogle/OCVS/"
+  prefer_http: true
+  download_timeout: 300
+  max_retries: 3
+  min_observations: 50
+  ftp_connection_reuse: true
+
+var_types:
+  RRAB:
+    target_n_gaia: 5000
+    target_n_ogle: 2500
+  RRC:
+    target_n_gaia: 3000
+    target_n_ogle: 1500
+  DCEP:
+    target_n_gaia: 2500
+    target_n_ogle: 1200
+  DSCT_SXPHE:
+    target_n_gaia: 3000
+    target_n_ogle: 1500
+  ECL:
+    target_n_gaia: 3500
+    target_n_ogle: 2000
+  MIRA_SR:
+    target_n_gaia: 2500
+    target_n_ogle: 1300
+
+features:
+  period:
+    min_frequency: 0.01
+    max_frequency: 25.0
+    samples_per_peak: 10
+    nyquist_factor: 5
+    fit_mean: true
+  fap:
+    method: "baluev"
+    threshold: 0.01
+  amplitude:
+    percentile_low: 2
+    percentile_high: 98
+  rise_time:
+    n_phase_bins: 100
+    smoothing_window: 5
+  fourier:
+    n_harmonics: 7
+    fit_method: "linear_least_squares"
+    phi21_range: "[0, 2*pi)"
+  moments:
+    robust: false
+  stetson:
+    use_errors: true
+  mean_mag:
+    method: "weighted_mean"
+  alias_detection:
+    enabled: true
+    precession_period_days: 63.0
+    frequency_tolerance: 0.002
+
+training:
+  batch_size: 256
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  max_epochs: 200
+  patience: 15
+  label_smoothing: 0.05
+  class_weight_strategy: "inverse_freq"
+  grad_clip_max_norm: 5.0
+  scheduler:
+    type: "cosine_warm_restarts"
+    T_0: 50
+    T_mult: 1
+    eta_min: 0.000001
+
+models:
+  hard_cbm:
+    hidden_dims: [64, 32]
+    dropout_rate: 0.3
+    use_batch_norm: true
+  hard_cbm_linear: {}
+  hard_cbm_cal:
+    calibrator_hidden: 16
+    predictor_hidden_dims: [64, 32]
+    dropout_rate: 0.3
+  e2e_hard_cbm:
+    n_bins: 100
+    encoder_channels: [32, 64, 128]
+    encoder_kernels: [7, 5, 3]
+    encoder_dropout: 0.2
+    hidden_dims: [64, 32]
+    predictor_dropout: 0.3
+    use_batch_norm: true
+    concept_loss_alpha: 1.0
+    noise_level: 0.03
+  soft_cbm:
+    concept_embed_dim: 4
+    hidden_dims: [64, 32]
+    dropout_rate: 0.3
+  cem:
+    concept_embed_dim: 8
+    hidden_dims: [64, 32]
+    dropout_rate: 0.3
+  mlp:
+    hidden_dims: [128, 64]
+    dropout_rate: 0.3
+  rf:
+    n_estimators: 500
+    max_depth: null
+    min_samples_split: 10
+    min_samples_leaf: 5
+  xgb:
+    n_estimators: 300
+    max_depth: 6
+    learning_rate: 0.1
+
+experiments:
+  ablation:
+    A1_remove_color: true
+    A2_minimal_concepts: true
+    A3_extended_20: true
+    A4_hard_vs_soft: true
+    A5_training_modes: true
+  intervention:
+    n_concepts_to_intervene: [1, 2, 3, 4, 6, 8, 12]
+    n_random_trials: 20
+    noise_std: [0.1, 0.5, 1.0, 2.0]
+  cross_survey:
+    modes: ["10dim", "12dim_with_match"]
+  learning_curve:
+    sample_sizes: [500, 1000, 2000, 4000, 6000, 8000, 10000, 12000]
+    n_repeats: 3
+
+visualization:
+  dpi: 300
+  format: "pdf"
+  figsize_single: [6, 5]
+  figsize_double: [12, 5]
+  colormap: "tab10"
+  font_size: 12

@@ -1,0 +1,79 @@
+# REFERENCE ONLY -- This file is NOT loaded by pipeline code. See constants.py and run_real_data_pipeline.py for actual values.
+concepts_12:
+  C1_period:
+    name: "period"
+    unit: "days"
+    min_physical: 0.02
+    max_physical: 1000.0
+    bounded: false
+  C2_amplitude:
+    name: "amplitude"
+    unit: "mag"
+    min_physical: 0.005
+    max_physical: 10.0
+    bounded: false
+  C3_rise_fraction:
+    name: "rise_fraction"
+    unit: "dimensionless"
+    min_physical: 0.0
+    max_physical: 1.0
+    bounded: true
+  C4_R21:
+    name: "R21"
+    unit: "dimensionless"
+    min_physical: 0.0
+    max_physical: 1.0
+    bounded: false
+  C5_R31:
+    name: "R31"
+    unit: "dimensionless"
+    min_physical: 0.0
+    max_physical: 0.6
+    bounded: false
+  C6_phi21:
+    name: "phi21"
+    unit: "radians"
+    min_physical: 0.0
+    max_physical: 6.2832
+    bounded: false
+  C7_skewness:
+    name: "skewness"
+    unit: "dimensionless"
+    min_physical: -5.0
+    max_physical: 5.0
+    bounded: false
+  C8_kurtosis:
+    name: "kurtosis"
+    unit: "dimensionless"
+    min_physical: -3.0
+    max_physical: 20.0
+    bounded: false
+  C9_stetson_K:
+    name: "stetson_K"
+    unit: "dimensionless"
+    min_physical: 0.0
+    max_physical: 5.0
+    bounded: false
+  C10_period_snr:
+    name: "period_snr"
+    unit: "dimensionless"
+    min_physical: 0.0
+    max_physical: 300.0
+    bounded: false
+  C11_color_bp_rp:
+    name: "color_bp_rp"
+    unit: "mag"
+    min_physical: -0.5
+    max_physical: 5.0
+    bounded: false
+  C12_mean_mag:
+    name: "mean_mag"
+    unit: "mag"
+    min_physical: 3.0
+    max_physical: 22.0
+    bounded: false
+
+quality_control:
+  min_observations: 10
+  sigma_clip: 3.0
+  max_nan_fraction: 0.3
